@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Interactive Path Planning</title>
+<style>
+  :root{
+    --bg:#f6f7fb; --ink:#1f2937; --muted:#6b7280; --panel:#ffffff;
+    --blue:#2563eb; --red:#dc2626; --gray:#9ca3af;
+  }
+  body{
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    background:var(--bg); color:var(--ink); margin:0; padding:1rem;
+  }
+  .wrap{max-width:1120px; margin:0 auto;}
+  .top{display:grid; grid-template-columns:1fr 300px; gap:1rem; align-items:start;}
+  .card{
+    background:var(--panel); border:1px solid #e5e7eb; border-radius:16px;
+    box-shadow:0 6px 18px rgba(0,0,0,.05);
+  }
+  .viz{padding:.9rem;}
+  .side{padding:1rem;}
+  h1{font-size:1.25rem; margin:.15rem 0 .6rem;}
+  h2{font-size:1rem; margin:.2rem 0 .5rem;}
+  p{margin:.35rem 0 .75rem; line-height:1.45;}
+  .controls{display:flex; flex-wrap:wrap; gap:.5rem; margin:.5rem 0 .85rem;}
+  button{
+    border:1px solid #d1d5db; background:#fff; color:var(--ink);
+    padding:.55rem .8rem; border-radius:999px; cursor:pointer; font-weight:600;
+  }
+  button.active{background:#111827; color:#fff; border-color:#111827;}
+  .legend{display:grid; gap:.45rem; font-size:.92rem; margin-top:.8rem;}
+  .legend .row{display:flex; align-items:center; gap:.55rem;}
+  .sw{width:16px; height:16px; border-radius:4px; border:1px solid rgba(0,0,0,.12);}
+  .info{padding:.8rem 1rem; background:#f9fafb; border:1px dashed #d1d5db; border-radius:12px; min-height:120px;}
+  .caption{font-size:.92rem; color:var(--muted);}
+  svg{width:100%; height:auto; display:block;}
+  .label{font-size:20px; font-weight:700; fill:#111827;}
+  .small{font-size:14px; fill:#374151;}
+  .obstacle{fill:#9ca3af;}
+  .route{fill:none; stroke-width:7; stroke-linecap:round; stroke-linejoin:round;}
+  .route-blue{stroke:var(--blue); stroke-dasharray:14 10;}
+  .route-red{stroke:var(--red); stroke-dasharray:9 6;}
+  .node{fill:#1d4ed8; stroke:white; stroke-width:4;}
+  .halo{fill:none; stroke:#93c5fd; stroke-width:12; opacity:.35;}
+  .badx{font-size:38px; font-weight:800; fill:var(--red);}
+  .callout{font-size:15px; fill:#111827;}
+  .robot-body{fill:#111827}
+  .robot-accent{fill:#60a5fa}
+  .robot-wheel{fill:#374151}
+  .robot-sensor{fill:#93c5fd;stroke:#1d4ed8;stroke-width:2}
+  .hidden{display:none;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="card viz">
+      <h1>Interactive path planning</h1>
+      <div class="controls">
+        <button class="mode active" data-mode="path">Show path</button>
+        <button class="mode" data-mode="obstacles">Show obstacles</button>
+        <button class="mode" data-mode="all">Show full view</button>
+      </div>
+
+      <svg viewBox="0 0 980 420" aria-labelledby="title desc" role="img">
+        <title id="title">Interactive path planning figure</title>
+        <desc id="desc">Interactive figure showing two collision-free path candidates from start to goal around obstacles.</desc>
+
+        <rect x="10" y="10" width="960" height="400" rx="36" ry="36" fill="#f3f4f6" stroke="#6b7280" stroke-width="3" stroke-dasharray="8 8"/>
+
+        <g id="obstacles">
+          <rect class="obstacle" x="292" y="36" width="58" height="42"/>
+          <rect class="obstacle" x="273" y="152" width="150" height="84"/>
+          <path class="obstacle" d="M690,112 L800,112 L818,205 L652,205 Z"/>
+          <path class="obstacle" d="M511,245 L617,245 L636,261 L636,316 L510,316 Z"/>
+        </g>
+
+        <g id="routes">
+          <g id="robotStart1" transform="translate(34,172) scale(0.82)">
+            <rect x="0" y="18" width="54" height="34" rx="10" class="robot-body"/>
+            <rect x="9" y="8" width="36" height="16" rx="7" class="robot-accent"/>
+            <circle cx="15" cy="55" r="7" class="robot-wheel"/>
+            <circle cx="39" cy="55" r="7" class="robot-wheel"/>
+            <rect x="22" y="0" width="4" height="10" class="robot-body"/>
+            <circle cx="24" cy="-2" r="5" class="robot-sensor"/>
+          </g>
+
+          <circle class="halo" cx="86" cy="220" r="14"/>
+          <circle class="node" cx="86" cy="220" r="14"/>
+          <circle class="halo" cx="845" cy="82" r="14"/>
+          <circle class="node" cx="845" cy="82" r="14"/>
+
+          <path id="pathRed" class="route route-red" d="M86,220
+                C145,228 260,242 335,238
+                C420,233 485,228 544,185
+                C626,126 685,95 770,93
+                C800,93 825,89 845,82"/>
+          <text id="xBottom" class="badx" x="655" y="350">×</text>
+        </g>
+
+        <text x="42" y="278" class="label">Start</text>
+        <text x="42" y="308" class="label">Point</text>
+        <text x="858" y="58" class="label">Goal</text>
+        <text x="848" y="88" class="label">Point</text>
+        <text x="705" y="250" class="label">Obstacle</text>
+
+        <g id="calloutsPath">
+          <text x="34" y="360" class="callout">Red path: the feasible collision-free route from the start point to the goal point.</text>
+          <text x="34" y="383" class="small">This slide now focuses on one valid planned path only.</text>
+        </g>
+        <g id="calloutsObs" class="hidden">
+          <text x="34" y="360" class="callout">Obstacle view: the planner must route around these blocked regions.</text>
+          <text x="34" y="383" class="small">Gray shapes are the obstacles that constrain the path.</text>
+        </g>
+        <g id="calloutsAll" class="hidden">
+          <text x="34" y="360" class="callout">Full view: planned path and obstacles shown together.</text>
+          <text x="34" y="383" class="small">The red route stays clear of the obstacle geometry.</text>
+        </g>
+      </svg>
+    </div>
+
+    <div class="card side">
+      <h2>What changes?</h2>
+      <div id="info" class="info">
+        <strong>Path</strong><br>
+        This view highlights the valid collision-free path from the start point to the goal point.
+      </div>
+
+      <div class="legend">
+        <div class="row"><span class="sw" style="background:#dc2626"></span>Red path candidate</div>
+        <div class="row"><span class="sw" style="background:#9ca3af"></span>Obstacle</div>
+        <div class="row"><span class="sw" style="background:#1d4ed8"></span>Start / Goal node</div>
+      </div>
+      <p class="caption"><strong>Path planning</strong><br>The emphasis is on finding a collision-free route from start to goal around discrete obstacles.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const modes = document.querySelectorAll('.mode');
+const pathRed = document.getElementById('pathRed');
+const xBottom = document.getElementById('xBottom');
+const info = document.getElementById('info');
+const calloutsPath = document.getElementById('calloutsPath');
+const calloutsObs = document.getElementById('calloutsObs');
+const calloutsAll = document.getElementById('calloutsAll');
+const obstacles = document.getElementById('obstacles');
+
+function setMode(mode){
+  modes.forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
+
+  if(mode === 'path'){
+    pathRed.classList.remove('hidden');
+    obstacles.classList.add('hidden');
+    xBottom.classList.add('hidden');
+    calloutsPath.classList.remove('hidden');
+    calloutsObs.classList.add('hidden');
+    calloutsAll.classList.add('hidden');
+    info.innerHTML = '<strong>Path</strong><br>This view highlights the valid collision-free path only.';
+  } else if(mode === 'obstacles'){
+    pathRed.classList.add('hidden');
+    obstacles.classList.remove('hidden');
+    xBottom.classList.remove('hidden');
+    calloutsPath.classList.add('hidden');
+    calloutsObs.classList.remove('hidden');
+    calloutsAll.classList.add('hidden');
+    info.innerHTML = '<strong>Obstacles</strong><br>This view shows the blocked regions that the planner must avoid.';
+  } else {
+    pathRed.classList.remove('hidden');
+    obstacles.classList.remove('hidden');
+    xBottom.classList.remove('hidden');
+    calloutsPath.classList.add('hidden');
+    calloutsObs.classList.add('hidden');
+    calloutsAll.classList.remove('hidden');
+    info.innerHTML = '<strong>Full view</strong><br>This view shows the valid planned path together with the obstacle layout.';
+  }
+}
+
+modes.forEach(btn => btn.addEventListener('click', () => setMode(btn.dataset.mode)));
+setMode('all');
+</script>
+</body>
+</html>

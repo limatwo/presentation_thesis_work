@@ -1,0 +1,9 @@
+.claude/
+.quarto/
+*_files/
+*_cache/
+.ipynb_checkpoints/
+.Rproj.user/
+Thumbs.db
+Desktop.ini
+*.log

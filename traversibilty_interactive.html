@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Traversability Cost Map Explorer</title>
+<style>
+  :root{
+    --bg:#f8fafc; --panel:#fff; --ink:#111827; --muted:#6b7280;
+    --free:#34d399; --low:#facc15; --med:#fb923c; --lethal:#ef4444; --unknown:#cbd5e1;
+    --line:#e5e7eb; --path:#2563eb; --path2:#16a34a;
+  }
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink);margin:0;padding:1rem}
+  .wrap{max-width:1180px;margin:0 auto}
+  .grid{display:grid;grid-template-columns:minmax(620px,1fr) 320px;gap:1rem}
+  .card{background:var(--panel);border:1px solid #e5e7eb;border-radius:16px;box-shadow:0 6px 18px rgba(0,0,0,.05)}
+  .pad{padding:1rem}
+  h1{font-size:1.2rem;margin:.15rem 0 .75rem}
+  .toolbar{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:.75rem}
+  button, select{
+    border:1px solid #d1d5db;background:#fff;border-radius:12px;padding:.55rem .75rem;font:inherit
+  }
+  button{cursor:pointer;font-weight:600}
+  button.active{background:#111827;color:#fff;border-color:#111827}
+  .legend{display:grid;gap:.45rem;margin:.7rem 0}
+  .legend .row{display:flex;align-items:center;gap:.55rem}
+  .sw{width:16px;height:16px;border-radius:4px;border:1px solid rgba(0,0,0,.12)}
+  .mini{font-size:.92rem;color:var(--muted)}
+  .readout{background:#f9fafb;border:1px dashed #d1d5db;border-radius:12px;padding:.85rem;min-height:100px}
+  svg{width:100%;height:auto;display:block}
+  .cell{stroke:#ffffff;stroke-width:1.4}
+  .path{fill:none;stroke:var(--path);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+  .pathAlt{fill:none;stroke:var(--path2);stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:8 7}
+  .gridline{stroke:#e5e7eb;stroke-width:1}
+  .marker{fill:#1d4ed8;stroke:#fff;stroke-width:3}
+  .label{font-weight:700;fill:#111827}
+  .hidden{display:none}
+  .hover{stroke:#111827 !important;stroke-width:3 !important}
+  .robot-body{fill:#111827}
+  .robot-accent{fill:#60a5fa}
+  .robot-wheel{fill:#374151}
+  .robot-sensor{fill:#93c5fd;stroke:#1d4ed8;stroke-width:2}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="grid">
+    <div class="card pad">
+      <h1>Traversability cost-map explorer</h1>
+      <div class="toolbar">
+        <button class="view active" data-view="classes">Show classes</button>
+        <button class="view" data-view="costs">Show numeric costs</button>
+        <button id="togglePath">Toggle preferred path</button>
+        <select id="scenario">
+          <option value="offroad">Off-road example</option>
+          <option value="onroad">Roadside example</option>
+        </select>
+      </div>
+
+      <svg id="svg" viewBox="0 0 760 520" role="img" aria-label="Interactive traversability grid">
+        <rect x="20" y="20" width="720" height="460" rx="18" fill="#f8fafc" stroke="#cbd5e1"/>
+        <g id="grid"></g>
+        <g id="paths">
+          <path id="pathA" class="path" d="M95,400 C145,388 190,356 225,325 C260,292 305,250 355,220 C410,186 480,176 560,165 C615,157 660,120 690,98"/>
+          <path id="pathB" class="pathAlt hidden" d="M95,400 C145,360 190,295 240,255 C300,205 350,165 435,130 C515,97 620,95 690,98"/>
+        </g>
+        
+        <g id="robotStart2" transform="translate(34,350) scale(0.72)">
+          <rect x="0" y="18" width="54" height="34" rx="10" class="robot-body"/>
+          <rect x="9" y="8" width="36" height="16" rx="7" class="robot-accent"/>
+          <circle cx="15" cy="55" r="7" class="robot-wheel"/>
+          <circle cx="39" cy="55" r="7" class="robot-wheel"/>
+          <rect x="22" y="0" width="4" height="10" class="robot-body"/>
+          <circle cx="24" cy="-2" r="5" class="robot-sensor"/>
+        </g>
+
+        <circle cx="88" cy="403" r="12" class="marker"/><text x="58" y="435" class="label">Start</text>
+        <circle cx="690" cy="98" r="12" class="marker"/><text x="646" y="70" class="label">Goal</text>
+      </svg>
+    </div>
+
+    <div class="card pad">
+      <h1>Hover a cell</h1>
+      <div id="readout" class="readout">Move over the map to inspect a local traversability estimate.</div>
+      <div class="legend">
+        <div class="row"><span class="sw" style="background:var(--free)"></span>Free — easy to traverse</div>
+        <div class="row"><span class="sw" style="background:var(--low)"></span>Low-cost — traversable with some penalty</div>
+        <div class="row"><span class="sw" style="background:var(--med)"></span>Medium-cost — harder, less preferred</div>
+        <div class="row"><span class="sw" style="background:var(--lethal)"></span>Lethal / obstacle — avoid</div>
+        <div class="row"><span class="sw" style="background:var(--unknown)"></span>Unknown — not yet observed</div>
+      </div>
+      <p class="mini"><strong>Traversability</strong><br>The emphasis is on estimating terrain cost or safety over the whole area, so the route prefers easier ground even when multiple paths are collision-free.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const palettes = {
+  free: getComputedStyle(document.documentElement).getPropertyValue('--free').trim(),
+  low: getComputedStyle(document.documentElement).getPropertyValue('--low').trim(),
+  med: getComputedStyle(document.documentElement).getPropertyValue('--med').trim(),
+  lethal: getComputedStyle(document.documentElement).getPropertyValue('--lethal').trim(),
+  unknown: getComputedStyle(document.documentElement).getPropertyValue('--unknown').trim()
+};
+const data = {
+  offroad: [
+    ['unknown','unknown','unknown','unknown','low','low','low','free','free','free','free','free'],
+    ['unknown','unknown','unknown','low','low','med','low','free','free','free','low','low'],
+    ['unknown','unknown','low','low','med','med','low','free','free','low','low','med'],
+    ['unknown','low','low','med','med','lethal','med','low','free','low','med','med'],
+    ['low','low','med','med','lethal','lethal','med','low','free','low','med','lethal'],
+    ['free','free','low','med','med','med','low','free','free','low','med','lethal'],
+    ['free','free','free','low','low','low','free','free','free','low','med','med'],
+    ['free','free','free','free','free','free','free','free','low','low','low','low']
+  ],
+  onroad: [
+    ['unknown','unknown','unknown','low','low','free','free','free','free','free','low','low'],
+    ['unknown','unknown','low','low','free','free','free','free','free','free','low','med'],
+    ['unknown','low','low','free','free','free','free','free','free','free','low','med'],
+    ['low','low','med','free','free','free','free','free','free','free','med','lethal'],
+    ['med','med','med','free','free','free','free','free','free','free','med','lethal'],
+    ['low','low','low','free','free','free','free','free','free','free','low','med'],
+    ['free','free','free','free','free','free','free','free','free','free','low','low'],
+    ['free','free','free','free','free','free','free','free','free','free','free','low']
+  ]
+};
+const costs = {free:0, low:1, med:2, lethal:3, unknown:'?'};
+const meanings = {
+  free:'easy to traverse',
+  low:'traversable with a small penalty',
+  med:'possible but less preferred',
+  lethal:'should be avoided',
+  unknown:'not observed or not inferred confidently'
+};
+
+const grid = document.getElementById('grid');
+const readout = document.getElementById('readout');
+const views = document.querySelectorAll('.view');
+const scenarioSelect = document.getElementById('scenario');
+const togglePath = document.getElementById('togglePath');
+const pathB = document.getElementById('pathB');
+let currentView = 'classes';
+let showAltPath = false;
+
+function renderGrid(scenario){
+  grid.innerHTML = '';
+  const rows = data[scenario].length;
+  const cols = data[scenario][0].length;
+  const startX = 52, startY = 60, w = 54, h = 48;
+
+  for(let r=0;r<rows;r++){
+    for(let c=0;c<cols;c++){
+      const cls = data[scenario][r][c];
+      const x = startX + c*w;
+      const y = startY + r*h;
+      const rect = document.createElementNS('http://www.w3.org/2000/svg','rect');
+      rect.setAttribute('x',x);
+      rect.setAttribute('y',y);
+      rect.setAttribute('width',w-2);
+      rect.setAttribute('height',h-2);
+      rect.setAttribute('rx',7);
+      rect.setAttribute('class','cell');
+      rect.setAttribute('fill', palettes[cls]);
+      rect.dataset.cls = cls;
+      rect.dataset.row = r;
+      rect.dataset.col = c;
+
+      const label = document.createElementNS('http://www.w3.org/2000/svg','text');
+      label.setAttribute('x', x + 20);
+      label.setAttribute('y', y + 29);
+      label.setAttribute('font-size','15');
+      label.setAttribute('font-weight','700');
+      label.setAttribute('fill', cls === 'lethal' ? '#ffffff' : '#111827');
+      label.textContent = currentView === 'classes' ? cls[0].toUpperCase() : String(costs[cls]);
+
+      rect.addEventListener('mouseenter', () => {
+        rect.classList.add('hover');
+        readout.innerHTML = `<strong>Cell (${r}, ${c})</strong><br>
+          Class: <strong>${cls}</strong><br>
+          Cost: <strong>${costs[cls]}</strong><br>
+          Meaning: ${meanings[cls]}.`;
+      });
+      rect.addEventListener('mouseleave', () => rect.classList.remove('hover'));
+
+      grid.appendChild(rect);
+      grid.appendChild(label);
+    }
+  }
+}
+
+function setView(view){
+  currentView = view;
+  views.forEach(v => v.classList.toggle('active', v.dataset.view === view));
+  renderGrid(scenarioSelect.value);
+}
+views.forEach(v => v.addEventListener('click', () => setView(v.dataset.view)));
+scenarioSelect.addEventListener('change', () => renderGrid(scenarioSelect.value));
+togglePath.addEventListener('click', () => {
+  showAltPath = !showAltPath;
+  pathB.classList.toggle('hidden', !showAltPath);
+});
+renderGrid('offroad');
+</script>
+</body>
+</html>

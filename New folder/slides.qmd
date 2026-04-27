@@ -1,0 +1,292 @@
+---
+title: "Behavior-Aware Evaluation and Improvement of LiDAR-Based Off-Road Terrain Perception Algorithms"
+subtitle: "presentation"
+author: "Mahmoud Abdelaal"
+format:
+  revealjs:
+    theme: serif
+    slide-number: true
+    toc: false
+    transition: fade
+    incremental: true
+    chalkboard: false
+    controls: true
+    progress: true
+    width: 1600
+    height: 900
+    smaller: false
+    center: false
+execute:
+  echo: false
+---
+
+## Title and framing
+
+### Behavior-Aware Evaluation and Improvement of LiDAR-Based Off-Road Terrain Perception Algorithms
+
+## Why this problem matters
+
+### Off-road autonomy is fundamentally safety-critical
+
+- Off-road environments are **unstructured, imbalanced, and operationally harsh**.
+- Rare terrain classes such as **mud, puddles, water, holes, and rocks** may dominate failure risk.
+- Standard perception metrics can hide dangerous behavior on these rare classes.
+- Therefore, a model with higher mIoU is **not necessarily the safer model**.
+
+**Core motivation:** perception should be evaluated according to its effect on navigation-relevant risk.
+
+::: notes
+Keep this slide practical.
+Emphasize that dominant classes such as grass or sky can inflate performance while hazardous classes remain poorly handled.
+:::
+
+## Research gap
+
+### Gap between perception metrics and real behavior
+
+Current practice usually assumes:
+
+$$
+\text{Higher mIoU} \Rightarrow \text{better deployment behavior}
+$$
+
+But this assumption can fail because of:
+
+- **class imbalance**,
+- **asymmetric misclassification costs**, and
+- **safety-critical false-safe errors**.
+
+### Main gap
+
+A perception model may look strong under standard metrics while still producing **unsafe downstream decisions**.
+
+::: notes
+This is the slide that should resonate most with Dr. Abido.
+Frame the issue as an objective-function mismatch.
+:::
+
+## Main idea
+
+### From accuracy-only evaluation to behavior-aware model selection
+
+For a set of candidate models $\Theta = \{\theta_1,\dots,\theta_M\}$:
+
+Standard selection uses
+
+$$
+\theta^*_{\text{metric}} = \arg\max_{\theta \in \Theta} \mathrm{mIoU}(\theta)
+$$
+
+Proposed selection uses
+
+$$
+\theta^* = \arg\min_{\theta \in \Theta} U(\theta)
+$$
+
+where $U(\theta)$ is a **behavior-aware expected risk**.
+
+### Key message
+
+The best model under mIoU may not be the best model under safety-relevant risk.
+
+::: notes
+State clearly that this is the central scientific contribution.
+:::
+
+## System-level view
+
+### Proposed pipeline
+
+1. **Sensor input** (LiDAR, and potentially multimodal extensions later)
+2. **Terrain classification / traversability estimation**
+3. **Cost-aware hazard interpretation**
+4. **Near-field hazard aggregation**
+5. **Safest heading recommendation**
+
+### Scope of the work
+
+- Main focus: **environmental perception**
+- Output is linked to downstream behavior
+- Full global planning is **not** the main scope
+
+::: notes
+Present this as a modular engineering system.
+That framing aligns well with control and decision-support thinking.
+:::
+
+## Mathematical formulation
+
+### Misclassification cost matrix
+
+Let
+
+$$
+C_{ij} = \text{cost of predicting class } i \text{ when the true class is } j
+$$
+
+with high penalties assigned to dangerous confusions, especially:
+
+- predicting **safe** when the truth is **hazardous**,
+- underestimating **stuck** or **water** regions,
+- confusing risk-critical rare classes with benign terrain.
+
+### Expected behavioral risk
+
+$$
+U(\theta)
+=
+\sum_{j=1}^{K} \pi_j \sum_{i=1}^{K} C_{ij} \, P_{ij}(\theta)
+$$
+
+where:
+
+- $\pi_j$ is empirical class frequency,
+- $P_{ij}(\theta)$ is the conditional confusion probability.
+
+::: notes
+Stress that this connects confusion statistics, class imbalance, and behavioral cost in one expression.
+:::
+
+## Why 
+
+### Why this should be interesting from an optimization and intelligent-systems perspective
+
+This work can be interpreted as:
+
+- a **cost-function design problem**,
+- a **risk-sensitive model-selection problem**,
+- an **intelligent decision-support problem**, and
+- a **system-level evaluation problem**.
+
+### Main positioning statement
+
+The contribution is not only a better perception model, but a better **criterion for selecting and evaluating models** in safety-critical deployment.
+
+::: notes
+Say explicitly: "I am treating perception selection as an optimization problem under asymmetric risk."
+:::
+
+## Candidate LiDAR architectures
+
+### LiDAR-based models to be studied and improved
+
+#### 1. FASTC-style architecture
+
+- attentional framework for semantic traversability classification,
+- efficient feature extraction from point clouds,
+- opportunity to refine attention and fusion design.
+
+#### 2. BEVNet-style architecture with sparse 3D convolution
+
+- voxelization and sparse 3D feature extraction,
+- residual modules,
+- attention mechanisms,
+- temporal aggregation for BEV traversability recognition.
+
+### Research intent
+
+These are not treated as fixed baselines only; they are **candidate backbones for improvement**.
+
+::: notes
+Make clear that the work has two pillars: evaluation framework and model improvement.
+:::
+
+## Why LiDAR in this proposal
+
+### Why prioritize LiDAR for the main implementation
+
+- LiDAR provides **terrain geometry and obstacle structure** directly.
+- It supports traversability reasoning in unstructured environments.
+- It is well suited for **BEV hazard representation**.
+- It provides a strong base before extending to multimodal fusion.
+
+### Important clarification
+
+The framework itself remains conceptually flexible and can later support RGB, semantic, geometric, or hybrid sensing pipelines.
+
+::: notes
+Keep this slide brief and engineering-oriented.
+:::
+
+## Preliminary evidence
+
+### Initial results already support the hypothesis
+
+Your preliminary study suggests:
+
+- severe **class imbalance** in RELLIS-3D,
+- hazardous classes receive very low representation,
+- standard mIoU can rank models differently from behavior-aware criteria,
+- $M_{beh}$ and $U(\theta)$ better reflect safety-relevant performance.
+
+### Interpretation
+
+This is early evidence of a **metrics-behavior mismatch** in off-road terrain perception.
+
+::: notes
+Do not overclaim.
+Say "preliminary evidence" and "suggests" rather than "proves."
+:::
+
+## Expected contributions
+
+### Technical contributions
+
+1. **Behavior-aware evaluation framework** for off-road terrain perception
+2. **Decision-theoretic risk formulation** using a misclassification cost matrix
+3. **Quantitative mismatch analysis** between mIoU and behavioral risk
+4. **Behavior-aware evaluation metric(s)** such as weighted IoU variants
+5. **Improved LiDAR-based models** based on FASTC-style and BEVNet-style designs
+6. **Perception-to-hazard-to-heading pipeline** for end-to-end validation
+
+::: notes
+This should read like thesis contributions, not just tasks.
+:::
+
+## Work plan
+
+### Proposed timeline
+
+| Period | Activities |
+|---|---|
+| Months 1--2 | Literature review, dataset selection, preprocessing, baseline setup |
+| Months 3--4 | Train candidate models, compute IoU and mIoU, identify failure cases |
+| Months 5--6 | Define cost matrix, compute behavioral risk, compare metric-optimal vs risk-optimal models |
+| Months 7--8 | Design behavior-aware metrics, validate alignment, implement hazard map and heading pipeline, finalize thesis results |
+
+::: notes
+If asked, mention that the timeline assumes code reuse from existing baselines where possible.
+:::
+
+## Takeaway
+
+### Closing message
+
+This proposal shifts off-road terrain perception from:
+
+- **accuracy-only evaluation**
+
+into:
+
+- **risk-aware, behavior-aligned model selection**.
+
+### Final one-sentence pitch
+
+The proposed work studies how to improve LiDAR-based terrain perception models **and** how to evaluate them using a decision-theoretic criterion that better supports safe autonomous behavior in off-road environments.
+
+::: notes
+End with the phrase: "optimization, intelligent systems, and safety-aware autonomy."
+:::
+
+<!-- ## Optional final discussion slide
+
+### Anticipated discussion points with Dr. Abido
+
+- How should the cost matrix $C$ be designed or learned?
+- Can the framework be extended toward **formal optimization of deployment utility**?
+- How should behavior-aware evaluation trade off safety and conservatism?
+- Can this framework later support multimodal or uncertainty-aware extensions?
+
+::: notes
+Use this if you want to invite research discussion after the main presentation.
+::: -->
