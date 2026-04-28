@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="1100"
+   height="900"
+   viewBox="0 0 1100 900"
+   version="1.1"
+   id="svg34"
+   sodipodi:docname="svg width=1100 height=900 viewBox=0.svg"
+   inkscape:version="1.4.2 (f4327f4, 2025-05-13)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview34"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="0.89777778"
+     inkscape:cx="549.69059"
+     inkscape:cy="450"
+     inkscape:window-width="1920"
+     inkscape:window-height="1010"
+     inkscape:window-x="1913"
+     inkscape:window-y="170"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg34" />
+  <defs
+     id="defs1">
+    <marker
+       markerWidth="0.63628411"
+       markerHeight="0.99999997"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       id="CapButt"
+       viewBox="0 0 0.63628413 1"
+       inkscape:stockid="Butt cap"
+       style="overflow:visible"
+       preserveAspectRatio="xMidYMid"
+       inkscape:isstock="true"
+       inkscape:collect="always">
+      <path
+         style="fill:context-stroke;stroke-linecap:butt"
+         d="M 0,-1 H 0.585 C 1.107,-1 1.369,-0.369 1,0 1.369,0.369 1.107,1 0.585,1 H 0 L -0.1,0 Z"
+         sodipodi:nodetypes="sssssscsss"
+         transform="scale(0.5)"
+         id="path64" />
+    </marker>
+    <marker
+       markerWidth="0.52499998"
+       markerHeight="0.99999995"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       id="CapTriangle"
+       viewBox="0 0 0.525 1"
+       inkscape:stockid="Triangle cap"
+       style="overflow:visible"
+       preserveAspectRatio="xMidYMid"
+       inkscape:isstock="true"
+       inkscape:collect="always">
+      <path
+         style="fill:context-stroke;stroke-linecap:butt"
+         d="M 0,-1 1,0 0,1 -0.05,0 Z"
+         sodipodi:nodetypes="sssssscsss"
+         transform="scale(0.5)"
+         id="path61" />
+    </marker>
+    <style
+       id="style1">
+      .title { font: 700 18px Arial, sans-serif; fill: #1f2937; }
+      .subtitle { font: 14px Arial, sans-serif; fill: #4b5563; }
+      .label { font: 700 16px Arial, sans-serif; fill: #1f2937; }
+      .small { font: 13px Arial, sans-serif; fill: #4b5563; }
+      .legend { font: 14px Arial, sans-serif; fill: #374151; }
+      .box { stroke: #4b5563; stroke-width: 1.4; rx: 14; ry: 14; }
+      .arrow { stroke: #6b7280; stroke-width: 2.2; fill: none; marker-end: url(#arrowhead); }
+      .branch { stroke: #9ca3af; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+    </style>
+    <marker
+       id="arrowhead"
+       markerWidth="10"
+       markerHeight="10"
+       refX="8"
+       refY="5"
+       orient="auto"
+       viewBox="0 0 10 10"
+       preserveAspectRatio="xMidYMid">
+      <path
+         d="M 0 0 L 10 5 L 0 10 z"
+         fill="#6b7280"
+         id="path1" />
+    </marker>
+    <marker
+       id="arrowhead-4"
+       markerWidth="10"
+       markerHeight="10"
+       refX="8"
+       refY="5"
+       orient="auto"
+       viewBox="0 0 10 10"
+       preserveAspectRatio="xMidYMid">
+      <path
+         d="M 0,0 10,5 0,10 Z"
+         fill="#6b7280"
+         id="path1-5" />
+    </marker>
+  </defs>
+  <!-- Background -->
+  <rect
+     x="0"
+     y="0"
+     width="1100"
+     height="900"
+     fill="#f7f7f7"
+     id="rect1" />
+  <!-- Title -->
+  <text
+     x="550"
+     y="40"
+     text-anchor="middle"
+     class="title"
+     id="text1">FASTC Flowchart</text>
+  <text
+     x="550"
+     y="64"
+     text-anchor="middle"
+     class="subtitle"
+     id="text2">Fast Attentional Framework for Semantic Traversability Classification Using Point Cloud</text>
+  <!-- Main boxes -->
+  <!-- Input -->
+  <rect
+     x="380"
+     y="95"
+     width="340"
+     height="68"
+     class="box"
+     fill="#d8d1b8"
+     id="rect2" />
+  <text
+     x="550"
+     y="123"
+     text-anchor="middle"
+     class="label"
+     id="text3">Input: 3D LiDAR point cloud</text>
+  <text
+     x="550"
+     y="145"
+     text-anchor="middle"
+     class="small"
+     id="text4">Raw scan from current frame</text>
+  <!-- Pillar feature extraction -->
+  <rect
+     x="320"
+     y="210"
+     width="460"
+     height="145"
+     class="box"
+     fill="#b9ddc7"
+     id="rect4" />
+  <text
+     x="550"
+     y="238"
+     text-anchor="middle"
+     class="label"
+     id="text5">Pillar Feature Extraction Module</text>
+  <text
+     x="550"
+     y="264"
+     text-anchor="middle"
+     class="small"
+     id="text6">1. Discretize point cloud into x-y pillars</text>
+  <text
+     x="550"
+     y="287"
+     text-anchor="middle"
+     class="small"
+     id="text7">2. Augment features: x,y,z,r, xc,yc,zc, xp,yp</text>
+  <text
+     x="550"
+     y="310"
+     text-anchor="middle"
+     class="small"
+     id="text8">3. PointNet-based pillar encoding</text>
+  <text
+     x="550"
+     y="333"
+     text-anchor="middle"
+     class="small"
+     id="text9">4. Scatter pillar features into BEV pseudo-image / feature map</text>
+  <!-- Decision -->
+  <rect
+     x="430"
+     y="395"
+     width="240"
+     height="58"
+     class="box"
+     fill="#ececec"
+     id="rect9" />
+  <text
+     x="550"
+     y="430"
+     text-anchor="middle"
+     class="label"
+     id="text10">Single-frame or multi-frame?</text>
+  <!-- Multi-frame fusion -->
+  <rect
+     x="120.02342"
+     y="510.02344"
+     width="394.38385"
+     height="173.31949"
+     class="box"
+     fill="#bcc7f0"
+     id="rect10" />
+  <text
+     x="320"
+     y="540"
+     text-anchor="middle"
+     class="label"
+     id="text11">Multi-Frame Fusion Module</text>
+  <text
+     x="320"
+     y="570"
+     text-anchor="middle"
+     class="small"
+     id="text12">1. Warp past feature maps to current frame coordinates</text>
+  <text
+     x="320"
+     y="595"
+     text-anchor="middle"
+     class="small"
+     id="text13">2. Channel attention</text>
+  <text
+     x="320"
+     y="620"
+     text-anchor="middle"
+     class="small"
+     id="text14">3. Spatial attention</text>
+  <text
+     x="320"
+     y="645"
+     text-anchor="middle"
+     class="small"
+     id="text15">4. Concatenate attended features</text>
+  <text
+     x="320"
+     y="670"
+     text-anchor="middle"
+     class="small"
+     id="text16">5. 1x1 convolution → fused feature map</text>
+  <!-- Traversability completion -->
+  <rect
+     x="580"
+     y="510"
+     width="400"
+     height="160"
+     class="box"
+     fill="#b9ddc7"
+     id="rect16" />
+  <text
+     x="780"
+     y="540"
+     text-anchor="middle"
+     class="label"
+     id="text17">Traversability Completion Module</text>
+  <text
+     x="780"
+     y="570"
+     text-anchor="middle"
+     class="small"
+     id="text18">1. Encoder with dilated blocks</text>
+  <text
+     x="780"
+     y="595"
+     text-anchor="middle"
+     class="small"
+     id="text19">2. Lightweight decoder</text>
+  <text
+     x="780"
+     y="620"
+     text-anchor="middle"
+     class="small"
+     id="text20">3. Fill sparse / empty / unknown regions</text>
+  <text
+     x="780"
+     y="645"
+     text-anchor="middle"
+     class="small"
+     id="text21">4. Produce final BEV traversability map</text>
+  <!-- Output -->
+  <rect
+     x="380"
+     y="735"
+     width="340"
+     height="78"
+     class="box"
+     fill="#d8d1b8"
+     id="rect21" />
+  <text
+     x="550"
+     y="765"
+     text-anchor="middle"
+     class="label"
+     id="text22">Output: BEV semantic traversability map</text>
+  <text
+     x="550"
+     y="790"
+     text-anchor="middle"
+     class="small"
+     id="text23">Classes: Free / Low-cost / Medium-cost / Lethal</text>
+  <!-- Arrows main vertical -->
+  <line
+     x1="550"
+     y1="163"
+     x2="550"
+     y2="210"
+     class="arrow"
+     id="line23" />
+  <line
+     x1="550"
+     y1="355"
+     x2="550"
+     y2="395"
+     class="arrow"
+     id="line24" />
+  <line
+     x1="781.2525"
+     y1="666.198"
+     x2="781.2525"
+     y2="706.198"
+     class="arrow"
+     id="line24-1"
+     style="fill:none;stroke:#6b7280;stroke-width:2.2;marker-end:url(#CapButt)" />
+  <!-- Branch arrows -->
+  <line
+     x1="490"
+     y1="453"
+     x2="350"
+     y2="510"
+     class="branch"
+     id="line25" />
+  <line
+     x1="610"
+     y1="453"
+     x2="690"
+     y2="510"
+     class="branch"
+     id="line26" />
+  <!-- Branch labels -->
+  <text
+     x="395"
+     y="485"
+     text-anchor="middle"
+     class="small"
+     id="text26">Multi-frame</text>
+  <text
+     x="650"
+     y="485"
+     text-anchor="middle"
+     class="small"
+     id="text27">Single-frame or after fusion</text>
+  <!-- Fusion to completion -->
+  <line
+     x1="520"
+     y1="590"
+     x2="580"
+     y2="590"
+     class="arrow"
+     id="line27" />
+  <!-- Completion to output -->
+  <line
+     x1="783.34155"
+     y1="710"
+     x2="551.12445"
+     y2="710"
+     class="arrow"
+     id="line29"
+     style="marker-end:url(#CapTriangle)" />
+  <line
+     x1="550"
+     y1="710"
+     x2="550"
+     y2="735"
+     class="arrow"
+     id="line30" />
+  <!-- Legend -->
+  <text
+     x="835"
+     y="120"
+     class="label"
+     id="text30">Legend</text>
+  <rect
+     x="835"
+     y="145"
+     width="18"
+     height="18"
+     rx="4"
+     ry="4"
+     fill="#b9ddc7"
+     stroke="#4b5563"
+     stroke-width="1"
+     id="rect30" />
+  <text
+     x="865"
+     y="159"
+     class="legend"
+     id="text31">Perception modules</text>
+  <rect
+     x="835"
+     y="175"
+     width="18"
+     height="18"
+     rx="4"
+     ry="4"
+     fill="#bcc7f0"
+     stroke="#4b5563"
+     stroke-width="1"
+     id="rect31" />
+  <text
+     x="865"
+     y="189"
+     class="legend"
+     id="text32">Temporal aggregation</text>
+  <rect
+     x="835"
+     y="205"
+     width="18"
+     height="18"
+     rx="4"
+     ry="4"
+     fill="#d8d1b8"
+     stroke="#4b5563"
+     stroke-width="1"
+     id="rect32" />
+  <text
+     x="865"
+     y="219"
+     class="legend"
+     id="text33">Input / output</text>
+  <rect
+     x="835"
+     y="235"
+     width="18"
+     height="18"
+     rx="4"
+     ry="4"
+     fill="#ececec"
+     stroke="#4b5563"
+     stroke-width="1"
+     id="rect33" />
+  <text
+     x="865"
+     y="249"
+     class="legend"
+     id="text34">Decision node</text>
+</svg>
