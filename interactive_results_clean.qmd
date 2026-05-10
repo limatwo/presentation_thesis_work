@@ -33,14 +33,15 @@ format:
 .frontpage-layout {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 10px;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  padding-top: 20px;
   height: 100%;
 }
 
 .frontpage-title {
-  font-size: 1.35em;
+  font-size: 1.05em;
   line-height: 1.2;
   color: #1f3f64;
   width: 100%;
@@ -53,13 +54,13 @@ format:
   justify-content: center;
   align-items: center;
   width: 100%;
-  max-height: 560px;
+  max-height: 380px;
 }
 
 .frontpage-art img {
   width: 100%;
   max-width: none;
-  max-height: 560px;
+  max-height: 380px;
   object-fit: contain;
 }
 
@@ -77,6 +78,21 @@ format:
   <div class="frontpage-title">
     Traversable terrain maps in unstructured environments for autonomous vehicles
   </div>
+
+  <div style="margin-top: 18px; font-size: 1.1em; color: #444;">
+    <strong>Proposal Defence</strong>
+  </div>
+
+  <div style="margin-top: 14px; font-size: 0.85em; color: #555; line-height: 1.8;">
+    <div><strong>Student:</strong> Mahmoud Abdelaal (Master’s Student)</div>
+    <div><strong>Supervisor:</strong> Dr. Brahim Brahimi</div>
+    <div>
+      <strong>Committee Members:</strong>
+      Dr. Brahim Brahimi, Dr. Mohammad A. Abido &amp; Dr. Mahmoud Khater
+    </div>
+    <div><strong>Department of Electrical Engineering</strong></div>
+  </div>
+
   <div class="frontpage-art">
     <img src="path.svg" alt="Illustration of a path through the environment">
   </div>
@@ -196,6 +212,9 @@ Traversability is the local terrain report (can I cross this mud?)
 </div>
 ```
 <!-- END: Traversability Interactive -->
+
+
+
 
 
 # <span style="color:#1f3f64; font-weight:800; font-size:0.72em;">Problem and gap</span> {background-color="#ffffff"}
@@ -325,7 +344,10 @@ That framing aligns well with control and decision-support thinking.
 :::
  END: System-level View -->
 
-# <span style="color:#1f3f64; font-weight:800; font-size:0.72em;">Proposed Approach</span> {background-color="#ffffff"}
+
+ 
+
+# <span style="color:#1f3f64; font-weight:800; font-size:0.72em;">Literature review</span> {background-color="#ffffff"}
 
 <p style="color:#64748b; font-size:0.5em; margin-top:0.6em;">
 
@@ -334,431 +356,7 @@ That framing aligns well with control and decision-support thinking.
 <div style="width:120px; height:5px; background:#2563eb; border-radius:999px; margin-top:1.1em;"></div>
 
 
-<!-- START: System Overview -->
-## System Overview
 
-![](pipeline.svg){width=96% fig-align="center"}
-<!-- END: Risk-Awa re Flowchart-->
-
-
-<!-- START: Workflow Overview -->
-## Workflow overview
-![](flow_ip_op.svg){width=90% fig-align="center"}
-<!-- END: Workflow Overview -->
-
-
-
-
-<!-- START: Main Idea -->
-<!-- SLIDE 5: Main idea -->
-## Risk Aware Approach
-
-### From accuracy-only evaluation to behavior-aware model selection
-
-For a set of candidate models $\Theta = \{\theta_1,\dots,\theta_M\}$:
-
-Standard selection uses
-
-$$
-\theta^*_{\text{metric}} = \arg\max_{\theta \in \Theta} \mathrm{mIoU}(\theta)
-$$
-
-Proposed selection uses
-
-$$
-\theta^* = \arg\min_{\theta \in \Theta} U(\theta)
-$$
-
-where $U(\theta)$ is a *behavior-aware expected risk*.
-
-Different attention models can yield better mIoU.
-
-::: notes
-State clearly that this is the central scientific contribution.
-:::
-<!-- END: Main Idea -->
-
-
-
-
-
-
-
-
-## Risk-Aware Flowchart
-
-```{=html}
-<div style="min-height: 560px; display: flex; align-items: center; justify-content: center;">
-  <img
-    src="flowchart_risk_aware.svg"
-    alt="Risk-Aware Flowchart"
-    style="width: 72%; max-width: 1100px; max-height: 76vh; display: block;">
-</div>
-```
-<!-- START: Mathematical Formulation -->
-<!-- SLIDE 7: Mathematical formulation -->
-## Mathematical formulation
-
-### Misclassification cost matrix
-
-Let
-
-$$
-C_{ij} = \text{cost of predicting class } i \text{ when the true class is } j
-$$
-
-with high penalties assigned to dangerous confusions, especially:
-
-- predicting safe when the truth is hazardous,
-- underestimating stuck or water regions,
-- confusing risk-critical rare classes with benign terrain.
-<!-- END: Mathematical Formulation -->
-
-<!-- START: Expected Behavioral Risk -->
-## Expected behavioral risk
-
-$$
-U(\theta)
-=
-\sum_{j=1}^{K} \pi_j \sum_{i=1}^{K} C_{ij} \, P_{ij}(\theta)
-$$
-
-where:
-
-- $\pi_j$ is empirical class frequency,
-- $P_{ij}(\theta)$ is the conditional confusion probability.
-
-::: notes
-Stress that this connects confusion statistics, class imbalance, and behavioral cost in one expression.
-:::
-<!-- END: Expected Behavioral Risk -->
-
-
-
-
-
-<!-- START: Behavior-Aware Evaluation Framework -->
-<!-- SLIDE 20: Behavior-aware evaluation framework timeline -->
-## Literature Gap: From Risk-Aware Planning to Behavior-Aware Model Selection
-```{=html}
-<div style="font-size:13px;font-weight:800;color:#1e3a5f;max-width:1280px;margin:0 auto;padding:8px 50px 0;letter-spacing:-0.01em;">Behavior-Aware Evaluation Framework - Key Prior Work</div>
-
-<div class="snake-wrap">
-  <div class="snake-tl" id="behTl">
-
-    <div class="snake-item s-right snake-active"
-      data-year="2001"
-      data-title="Elkan - The Foundations of Cost-Sensitive Learning"
-      data-summary="Established the decision-theoretic basis for classification under asymmetric misclassification penalties, showing that evaluation and selection should depend on the cost of mistakes rather than accuracy alone."
-      data-contribution="Different mistakes can have different costs."
-      data-gap="General classification theory; not specific to off-road perception or robot behavior.">
-      <span class="snake-year">2001</span>
-      <div class="snake-title">Elkan - Cost-Sensitive Learning</div>
-      <div class="snake-body">Decision-theoretic classification with asymmetric error costs.</div>
-    </div>
-
-    <div class="snake-item s-left"
-      data-year="2021"
-      data-title="STEP - Stochastic Traversability Evaluation and Planning for Risk-Aware Off-road Navigation"
-      data-summary="Introduced stochastic traversability evaluation with tail-risk assessment through CVaR, connecting terrain uncertainty to safer off-road navigation behavior."
-      data-contribution="Uses CVaR for risk-aware off-road traversability."
-      data-gap="Focuses on planning/traversability risk, not perception model selection.">
-      <span class="snake-year">2021</span>
-      <div class="snake-title">STEP</div>
-      <div class="snake-body">CVaR-based traversability evaluation for risk-aware off-road navigation.</div>
-    </div>
-
-    <div class="snake-item s-right"
-      data-year="2022"
-      data-title="Fan et al. - Learning Risk-Aware Costmaps for Traversability in Challenging Environments"
-      data-summary="Learned traversability cost distributions directly from data and focused on tail-risk prediction rather than only expected terrain cost."
-      data-contribution="Learns tail-risk-aware traversability costmaps."
-      data-gap="Does not evaluate segmentation models by asymmetric perception-error cost.">
-      <span class="snake-year">2022</span>
-      <div class="snake-title">Risk-Aware Costmaps</div>
-      <div class="snake-body">Learning tail-risk-aware traversability costmaps from data.</div>
-    </div>
-
-    <div class="snake-item s-left"
-      data-year="2022"
-      data-title="Cai et al. - Risk-Aware Off-Road Navigation via a Learned Speed Distribution Map"
-      data-summary="Modeled traversability through a learned speed distribution and converted that uncertainty-aware representation into CVaR-based planning costs."
-      data-contribution="Converts learned speed uncertainty into risk-aware costs."
-      data-gap="Does not define a metric for choosing the safest perception model.">
-      <span class="snake-year">2022</span>
-      <div class="snake-title">Learned Speed Distribution Map</div>
-      <div class="snake-body">Learned distributions transformed into risk-aware navigation costs.</div>
-    </div>
-
-    <div class="snake-item s-right"
-      data-year="2023"
-      data-title="Wang et al. - Revisiting Evaluation Metrics for Semantic Segmentation"
-      data-summary="Showed that standard segmentation metrics can be biased under class and size imbalance, and advocated richer evaluation using fine-grained and worst-case metrics."
-      data-contribution="Shows standard mIoU can hide failures under imbalance."
-      data-gap="Diagnoses metric weakness but does not give a behavior-aware replacement.">
-      <span class="snake-year">2023</span>
-      <div class="snake-title">Metric Limitations Under Imbalance</div>
-      <div class="snake-body">Fine-grained and worst-case segmentation metrics beyond standard mIoU.</div>
-    </div>
-
-    <div class="snake-item s-left"
-      data-year="2024"
-      data-title="EVORA - Deep Evidential Traversability Learning for Risk-Aware Off-Road Autonomy"
-      data-summary="Extended risk-aware traversability learning with explicit uncertainty modeling, including aleatoric and epistemic uncertainty, to support safer off-road autonomy."
-      data-contribution="Adds uncertainty-aware traversability learning."
-      data-gap="Improves risk representation, but still does not answer which perception model is safest to deploy.">
-      <span class="snake-year">2024</span>
-      <div class="snake-title">EVORA</div>
-      <div class="snake-body">Evidential uncertainty and risk-aware traversability learning.</div>
-    </div>
-
-    <div class="snake-item s-right"
-      data-year="2026"
-      data-title="This Work - Behavior-Aware Evaluation Framework for Off-Road Terrain Perception"
-      data-summary="Combines cost-sensitive evaluation, class-imbalance awareness, and hazard-oriented interpretation to compare perception models using expected behavioral risk rather than standard segmentation metrics alone."
-      data-role="Your contribution is to connect perception evaluation to downstream navigation consequences through a misclassification cost matrix, behavior-aware metrics, and a perception-to-hazard-to-heading pipeline.">
-      <span class="snake-year">2026</span>
-      <div class="snake-title">This Work</div>
-      <div class="snake-body">Behavior-aware model selection for off-road perception under asymmetric risk.</div>
-    </div>
-
-  </div>
-
-  <div class="snake-panel" id="behPanel">
-    <div class="snake-panel-year" id="behYear">2001</div>
-    <div class="snake-panel-title" id="behTitle">Elkan - The Foundations of Cost-Sensitive Learning</div>
-    <div class="snake-panel-section"><strong>Summary:</strong> <span id="behSummary">Established the decision-theoretic basis for classification under asymmetric misclassification penalties, showing that evaluation and selection should depend on the cost of mistakes rather than accuracy alone.</span></div>
-    <div class="snake-panel-section"><strong>Contribution:</strong> <span id="behContribution">Different mistakes can have different costs.</span></div>
-    <div class="snake-panel-section"><strong>Remaining gap:</strong> <span id="behGap">General classification theory; not specific to off-road perception or robot behavior.</span></div>
-</div>
-
-<script>
-(function() {
-  var items = Array.from(document.querySelectorAll('#behTl .snake-item'));
-  var behYear = document.getElementById('behYear');
-  var behTitle = document.getElementById('behTitle');
-  var behSummary = document.getElementById('behSummary');
-  var behContribution = document.getElementById('behContribution');
-  var behGap = document.getElementById('behGap');
-
-  function activate(item) {
-    items.forEach(function(i) { i.classList.remove('snake-active'); });
-    item.classList.add('snake-active');
-    behYear.textContent = item.dataset.year;
-    behTitle.textContent = item.dataset.title;
-    behSummary.textContent = item.dataset.summary;
-    behContribution.textContent = item.dataset.contribution;
-    behGap.textContent = item.dataset.gap;
-  }
-
-  items.forEach(function(item) {
-    item.addEventListener('click', function() { activate(item); });
-  });
-})();
-</script>
-```
-<!-- END: Behavior-Aware Evaluation Framework -->
-
-
-
-
-
-
-
-
-<!-- ## Optional final discussion slide
-
-### Anticipated discussion points with Dr. Abido
-
-- How should the cost matrix $C$ be designed or learned?
-- Can the framework be extended toward **formal optimization of deployment utility**?
-- How should behavior-aware evaluation trade off safety and conservatism?
-- Can this framework later support multimodal or uncertainty-aware extensions?
-
-::: notes
-Use this if you want to invite research discussion after the main presentation.
-::: -->
-<!-- END: Takeaway -->
-
-
-
-
-
-# <span style="color:#1f3f64; font-weight:800; font-size:0.72em;">Architectures</span> {background-color="#ffffff"}
-
-<p style="color:#64748b; font-size:0.5em; margin-top:0.6em;">
-
-</p>
-
-<div style="width:120px; height:5px; background:#2563eb; border-radius:999px; margin-top:1.1em;"></div>
-
-
-
-
-<!-- START: Candidate LiDAR Architectures -->
-<!-- SLIDE 9: Candidate LiDAR architectures -->
-## Candidate LiDAR architectures
-
-### LiDAR-based models to be studied and improved
-
-#### 1. FASTC-style architecture
-
-- attentional framework for semantic traversability classification,
-- efficient feature extraction from point clouds,
-- opportunity to refine attention and fusion design.
-
-#### 2. BEVNet-style architecture with sparse 3D convolution
-
-- voxelization and sparse 3D feature extraction,
-- residual modules,
-- attention mechanisms,
-- temporal aggregation for BEV traversability recognition.
-These are not treated as fixed baselines only; they are candidate backbones for improvement.
-<!-- END: Candidate LiDAR Architectures -->
-
-
-<!-- START: Why LiDAR -->
-<!-- SLIDE 10: Why LiDAR in this proposal -->
-## Why LiDAR in this proposal
-
-### Why prioritize LiDAR for the main implementation
-
-- LiDAR provides **terrain geometry and obstacle structure** directly.
-- It supports traversability reasoning in unstructured environments.
-- It is well suited for **BEV hazard representation**.
-- It provides a strong base before extending to multimodal fusion.
-
-### Important clarification
-
-The framework itself remains conceptually flexible and can later support RGB, semantic, geometric, or hybrid sensing pipelines.
-
-::: notes
-Keep this slide brief and engineering-oriented.
-:::
-<!-- END: Why LiDAR -->
-
-
-<!-- START: FASTC Architecture Flowchart -->
-## Fast Attentional Framework for Semantic Traversability Classification Using Point Cloud (FASTC)
-
-:::{style="text-align: center;"}
-![](Fastc_flowchart.svg){width=60%}
-:::
-<!-- END: FASTC Architecture Flowchart -->
-
-
-
-<!-- START: FASTC Timeline -->
-<!-- SLIDE 19: FASTC key prior work timeline -->
-## Prior Work and Remaining Gaps Behind FASTC
-```{=html}
-<div style="font-size:13px;font-weight:800;color:#1e3a5f;max-width:1280px;margin:0 auto;padding:8px 50px 0;letter-spacing:-0.01em;">FASTC — Key Prior Work</div>
-
-<div class="snake-wrap">
-  <div class="snake-tl" id="fastcTl">
-
-    <div class="snake-item s-right snake-active"
-      data-year="2017"
-      data-title="PointNet — Deep Learning on Point Sets for 3D Classification and Segmentation"
-      data-summary="Processes raw point clouds directly as unordered sets without voxelization using a shared MLP per point followed by symmetric max pooling, making the network permutation-invariant, simple, and easy to embed in larger systems."
-      data-contribution="Learns features directly from unordered point sets using shared MLPs and symmetric pooling."
-      data-gap="PointNet is a point-level encoder, but by itself it does not provide an efficient BEV traversability map or temporal completion.">
-      <span class="snake-year">2017</span>
-      <div class="snake-title">PointNet</div>
-      <div class="snake-body">Per-point MLP + max pooling on raw point sets — encoder used inside each pillar.</div>
-    </div>
-
-    <div class="snake-item s-left"
-      data-year="2018"
-      data-title="SENet / CBAM / Non-local — Attention Lineage Behind FASTC's Fusion"
-      data-summary="SENet introduced channel attention (squeeze-and-excitation). CBAM combined channel and spatial attention sequentially. Non-local Networks generalized self-attention for long-range spatial dependencies in vision."
-      data-contribution="Introduced mechanisms for emphasizing informative channels, spatial regions, and long-range dependencies."
-      data-gap="These attention modules are general vision components; they are not designed specifically for aligned multi-frame LiDAR traversability fusion.">
-      <span class="snake-year">2018</span>
-      <div class="snake-title">SENet · CBAM · Non-local</div>
-      <div class="snake-body">Channel + spatial attention lineage — drives FASTC's spatio-temporal fusion block.</div>
-    </div>
-
-    <div class="snake-item s-right"
-      data-year="2019"
-      data-title="PointPillars — Fast Encoders for Object Detection from Point Clouds"
-      data-summary="Converts a point cloud into vertical column 'pillars' in the x-y plane, encodes points in each pillar with a PointNet-style network, then produces a pseudo-image so the rest of the model can use efficient 2D convolutions instead of expensive 3D convolutions."
-      data-contribution="Converts point clouds into vertical pillars and scatters learned pillar features into a 2D BEV pseudo-image."
-      data-gap="PointPillars is efficient, but it was mainly designed for object detection, not dense off-road traversability completion.">
-      <span class="snake-year">2019</span>
-      <div class="snake-title">PointPillars</div>
-      <div class="snake-body">Pillarized point cloud → 2D pseudo-image — the core efficiency idea behind FASTC's front end.</div>
-    </div>
-
-    <div class="snake-item s-left"
-      data-year="2021"
-      data-title="RegSeg — Rethinking Dilated Convolution for Real-time Semantic Segmentation"
-      data-summary="A real-time segmentation architecture using dilated convolutions with carefully chosen dilation rates to preserve detail while expanding receptive field, combined with a lightweight decoder to recover local structure efficiently."
-      data-contribution="Uses dilated convolutions and a lightweight decoder for efficient real-time semantic segmentation."
-      data-gap="RegSeg is designed for image segmentation, not sparse LiDAR BEV maps with unknown or incomplete regions.">
-      <span class="snake-year">2021</span>
-      <div class="snake-title">RegSeg</div>
-      <div class="snake-body">Dilated convs + lightweight decoder — blueprint for FASTC's completion stage.</div>
-    </div>
-
-    <div class="snake-item s-right"
-      data-year="2022"
-      data-title="BEVNet — Semantic Terrain Classification for Off-Road Autonomous Driving"
-      data-summary="Predicts a bird's-eye-view terrain-cost map for navigation from LiDAR using both geometry and semantics, with temporal consistency. Uses 3D convolutions, recurrent temporal aggregation, and a completion network."
-      data-contribution="Predicts BEV terrain cost maps from LiDAR for off-road navigation using geometry, semantics, temporal aggregation, and completion."
-      data-gap="BEVNet is the closest predecessor, but its 3D convolutions and recurrent temporal fusion make the model heavier and slower.">
-      <span class="snake-year">2022</span>
-      <div class="snake-title">BEVNet</div>
-      <div class="snake-body">Semantic terrain cost-map from LiDAR — FASTC's direct predecessor and task blueprint.</div>
-    </div>
-
-  </div>
-
-  <div class="snake-panel" id="fastcPanel">
-    <div class="snake-panel-year" id="fp2Year">2017</div>
-    <div class="snake-panel-title" id="fp2Title">PointNet — Deep Learning on Point Sets for 3D Classification and Segmentation</div>
-    <div class="snake-panel-section"><strong>Summary:</strong> <span id="fp2Summary">Processes raw point clouds directly as unordered sets without voxelization using a shared MLP per point followed by symmetric max pooling, making the network permutation-invariant, simple, and easy to embed in larger systems.</span></div>
-    <div class="snake-panel-section"><strong>Contribution:</strong> <span id="fp2Contribution">Learns features directly from unordered point sets using shared MLPs and symmetric pooling.</span></div>
-    <div class="snake-panel-section"><strong>Remaining gap:</strong> <span id="fp2Gap">PointNet is a point-level encoder, but by itself it does not provide an efficient BEV traversability map or temporal completion.</span></div>
-  </div>
-</div>
-
-<script>
-(function() {
-  var items = Array.from(document.querySelectorAll('#fastcTl .snake-item'));
-  var fp2Year = document.getElementById('fp2Year');
-  var fp2Title = document.getElementById('fp2Title');
-  var fp2Summary = document.getElementById('fp2Summary');
-  var fp2Contribution = document.getElementById('fp2Contribution');
-  var fp2Gap = document.getElementById('fp2Gap');
-
-  function activate(item) {
-    items.forEach(function(i) { i.classList.remove('snake-active'); });
-    item.classList.add('snake-active');
-    fp2Year.textContent = item.dataset.year;
-    fp2Title.textContent = item.dataset.title;
-    fp2Summary.textContent = item.dataset.summary;
-    fp2Contribution.textContent = item.dataset.contribution;
-    fp2Gap.textContent = item.dataset.gap;
-  }
-
-  items.forEach(function(item) {
-    item.addEventListener('click', function() { activate(item); });
-  });
-})();
-</script>
-```
-<!-- END: FASTC Timeline -->
-
-<!-- START: RAC-BEVNet Architecture -->
-## RAC-BEVNet = Residual-Attention-ConvGRU BEVNet Architecture
-
-:::{style="text-align: center;"}
-![](RSCA-ConvGRU.svg){width=60%}
-:::
-<!-- END: RAC-BEVNet Architecture -->
-
-<!-- START: BEVNet Timeline -->
 ## Literature Gap: From Semantic Segmentation to Risk-Aware BEV Traversability
 ```{=html}
 <style>
@@ -1011,7 +609,7 @@ Keep this slide brief and engineering-oriented.
     <div class="snake-panel-title" id="spTitle">Long, Shelhamer, Darrell — FCN</div>
     <div class="snake-panel-section"><strong>Summary:</strong> <span id="spSummary">Fully Convolutional Networks for Semantic Segmentation introduced end-to-end pixelwise prediction by replacing fully-connected layers with convolutional ones, enabling dense labelling at arbitrary resolution.</span></div>
     <div class="snake-panel-section"><strong>Contribution:</strong> <span id="spContribution">Introduced end-to-end dense pixelwise prediction using fully convolutional networks.</span></div>
-    <div class="snake-panel-section"><strong>Remaining gap:</strong> <span id="spGap">Works mainly as an image-space segmentation method; it does not address BEV traversability, temporal mapping, or risk-sensitive terrain cost.</span></div>
+    <div class="snake-panel-section"><strong>limitation:</strong> <span id="spGap">Works mainly as an image-space segmentation method; it does not address BEV traversability, temporal mapping, or risk-sensitive terrain cost.</span></div>
   </div>
 </div>
 
@@ -1043,6 +641,530 @@ Keep this slide brief and engineering-oriented.
 <!-- END: BEVNet Timeline -->
 
 
+## Literature Gap: From Risk-Aware Planning to Behavior-Aware Model Selection
+```{=html}
+<div style="font-size:13px;font-weight:800;color:#1e3a5f;max-width:1280px;margin:0 auto;padding:8px 50px 0;letter-spacing:-0.01em;">Behavior-Aware Evaluation Framework - Key Prior Work</div>
+
+<div class="snake-wrap">
+  <div class="snake-tl" id="behTl">
+
+    <div class="snake-item s-right snake-active"
+      data-year="2001"
+      data-title="Elkan - The Foundations of Cost-Sensitive Learning"
+      data-summary="Established the decision-theoretic basis for classification under asymmetric misclassification penalties, showing that evaluation and selection should depend on the cost of mistakes rather than accuracy alone."
+      data-contribution="Different mistakes can have different costs."
+      data-gap="General classification theory; not specific to off-road perception or robot behavior.">
+      <span class="snake-year">2001</span>
+      <div class="snake-title">Elkan - Cost-Sensitive Learning</div>
+      <div class="snake-body">Decision-theoretic classification with asymmetric error costs.</div>
+    </div>
+
+    <div class="snake-item s-left"
+      data-year="2021"
+      data-title="STEP - Stochastic Traversability Evaluation and Planning for Risk-Aware Off-road Navigation"
+      data-summary="Introduced stochastic traversability evaluation with tail-risk assessment through CVaR, connecting terrain uncertainty to safer off-road navigation behavior."
+      data-contribution="Uses CVaR for risk-aware off-road traversability."
+      data-gap="Focuses on planning/traversability risk, not perception model selection.">
+      <span class="snake-year">2021</span>
+      <div class="snake-title">STEP</div>
+      <div class="snake-body">CVaR-based traversability evaluation for risk-aware off-road navigation.</div>
+    </div>
+
+    <div class="snake-item s-right"
+      data-year="2022"
+      data-title="Fan et al. - Learning Risk-Aware Costmaps for Traversability in Challenging Environments"
+      data-summary="Learned traversability cost distributions directly from data and focused on tail-risk prediction rather than only expected terrain cost."
+      data-contribution="Learns tail-risk-aware traversability costmaps."
+      data-gap="Does not evaluate segmentation models by asymmetric perception-error cost.">
+      <span class="snake-year">2022</span>
+      <div class="snake-title">Risk-Aware Costmaps</div>
+      <div class="snake-body">Learning tail-risk-aware traversability costmaps from data.</div>
+    </div>
+
+    <div class="snake-item s-left"
+      data-year="2022"
+      data-title="Cai et al. - Risk-Aware Off-Road Navigation via a Learned Speed Distribution Map"
+      data-summary="Modeled traversability through a learned speed distribution and converted that uncertainty-aware representation into CVaR-based planning costs."
+      data-contribution="Converts learned speed uncertainty into risk-aware costs."
+      data-gap="Does not define a metric for choosing the safest perception model.">
+      <span class="snake-year">2022</span>
+      <div class="snake-title">Learned Speed Distribution Map</div>
+      <div class="snake-body">Learned distributions transformed into risk-aware navigation costs.</div>
+    </div>
+
+    <div class="snake-item s-right"
+      data-year="2023"
+      data-title="Wang et al. - Revisiting Evaluation Metrics for Semantic Segmentation"
+      data-summary="Showed that standard segmentation metrics can be biased under class and size imbalance, and advocated richer evaluation using fine-grained and worst-case metrics."
+      data-contribution="Shows standard mIoU can hide failures under imbalance."
+      data-gap="Diagnoses metric weakness but does not give a behavior-aware replacement.">
+      <span class="snake-year">2023</span>
+      <div class="snake-title">Metric Limitations Under Imbalance</div>
+      <div class="snake-body">Fine-grained and worst-case segmentation metrics beyond standard mIoU.</div>
+    </div>
+
+    <div class="snake-item s-left"
+      data-year="2024"
+      data-title="EVORA - Deep Evidential Traversability Learning for Risk-Aware Off-Road Autonomy"
+      data-summary="Extended risk-aware traversability learning with explicit uncertainty modeling, including aleatoric and epistemic uncertainty, to support safer off-road autonomy."
+      data-contribution="Adds uncertainty-aware traversability learning."
+      data-gap="Improves risk representation, but still does not answer which perception model is safest to deploy.">
+      <span class="snake-year">2024</span>
+      <div class="snake-title">EVORA</div>
+      <div class="snake-body">Evidential uncertainty and risk-aware traversability learning.</div>
+    </div>
+
+    <div class="snake-item s-right"
+      data-year="2026"
+      data-title="This Work - Behavior-Aware Evaluation Framework for Off-Road Terrain Perception"
+      data-summary="Combines cost-sensitive evaluation, class-imbalance awareness, and hazard-oriented interpretation to compare perception models using expected behavioral risk rather than standard segmentation metrics alone."
+      data-role="Your contribution is to connect perception evaluation to downstream navigation consequences through a misclassification cost matrix, behavior-aware metrics, and a perception-to-hazard-to-heading pipeline.">
+      <span class="snake-year">2026</span>
+      <div class="snake-title">This Work</div>
+      <div class="snake-body">Behavior-aware model selection for off-road perception under asymmetric risk.</div>
+    </div>
+
+  </div>
+
+  <div class="snake-panel" id="behPanel">
+    <div class="snake-panel-year" id="behYear">2001</div>
+    <div class="snake-panel-title" id="behTitle">Elkan - The Foundations of Cost-Sensitive Learning</div>
+    <div class="snake-panel-section"><strong>Summary:</strong> <span id="behSummary">Established the decision-theoretic basis for classification under asymmetric misclassification penalties, showing that evaluation and selection should depend on the cost of mistakes rather than accuracy alone.</span></div>
+    <div class="snake-panel-section"><strong>Contribution:</strong> <span id="behContribution">Different mistakes can have different costs.</span></div>
+    <div class="snake-panel-section"><strong>limitation:</strong> <span id="behGap">General classification theory; not specific to off-road perception or robot behavior.</span></div>
+</div>
+
+<script>
+(function() {
+  var items = Array.from(document.querySelectorAll('#behTl .snake-item'));
+  var behYear = document.getElementById('behYear');
+  var behTitle = document.getElementById('behTitle');
+  var behSummary = document.getElementById('behSummary');
+  var behContribution = document.getElementById('behContribution');
+  var behGap = document.getElementById('behGap');
+
+  function activate(item) {
+    items.forEach(function(i) { i.classList.remove('snake-active'); });
+    item.classList.add('snake-active');
+    behYear.textContent = item.dataset.year;
+    behTitle.textContent = item.dataset.title;
+    behSummary.textContent = item.dataset.summary;
+    behContribution.textContent = item.dataset.contribution;
+    behGap.textContent = item.dataset.gap;
+  }
+
+  items.forEach(function(item) {
+    item.addEventListener('click', function() { activate(item); });
+  });
+})();
+</script>
+```
+<!-- END: Behavior-Aware Evaluation Framework -->
+
+
+
+
+
+
+<!-- ## Optional final discussion slide
+
+### Anticipated discussion points with Dr. Abido
+
+- How should the cost matrix $C$ be designed or learned?
+- Can the framework be extended toward **formal optimization of deployment utility**?
+- How should behavior-aware evaluation trade off safety and conservatism?
+- Can this framework later support multimodal or uncertainty-aware extensions?
+
+::: notes
+Use this if you want to invite research discussion after the main presentation.
+::: -->
+<!-- END: Takeaway -->
+
+
+
+
+
+
+
+
+## Prior Work and Remaining Gaps Behind FASTC
+```{=html}
+<div style="font-size:13px;font-weight:800;color:#1e3a5f;max-width:1280px;margin:0 auto;padding:8px 50px 0;letter-spacing:-0.01em;">
+  Foundations → Direct Predecessor → FASTC
+</div>
+
+<div class="snake-wrap">
+  <div class="snake-tl" id="fastcTl">
+
+    <div class="snake-item s-right"
+      data-year="2017"
+      data-role="Point-cloud feature foundation"
+      data-title="PointNet — Deep Learning on Point Sets for 3D Classification and Segmentation"
+      data-summary="PointNet showed that raw point clouds can be processed directly as unordered point sets using shared per-point MLPs and symmetric max pooling."
+      data-contribution="Provides the point-feature learning idea used inside pillar-based encoders."
+      data-gap-label="limitation:"
+      data-gap="PointNet is only a point-level encoder. It does not by itself generate a dense BEV traversability map or handle temporal completion.">
+      <span class="snake-year">2017</span>
+      <div class="snake-title">PointNet</div>
+      <div class="snake-body">Raw point features using shared MLPs and max pooling.</div>
+    </div>
+
+    <div class="snake-item s-left"
+      data-year="2018"
+      data-role="Attention foundation"
+      data-title="SENet / CBAM / Non-local — Attention Lineage"
+      data-summary="SENet introduced channel attention, CBAM combined channel and spatial attention, and Non-local Networks introduced long-range self-attention for vision tasks."
+      data-contribution="Provides the idea of focusing on informative channels, spatial regions, and long-range dependencies."
+      data-gap-label="limitation:"
+      data-gap="These are general attention modules. They are not designed specifically for aligned multi-frame LiDAR traversability fusion.">
+      <span class="snake-year">2018</span>
+      <div class="snake-title">SENet · CBAM · Non-local</div>
+      <div class="snake-body">Attention mechanisms for focusing on useful features.</div>
+    </div>
+
+    <div class="snake-item s-right"
+      data-year="2019"
+      data-role="Efficient BEV representation"
+      data-title="PointPillars — Fast Encoders for Object Detection from Point Clouds"
+      data-summary="PointPillars converts a point cloud into vertical pillars in the x-y plane, encodes each pillar, and scatters the features into a 2D BEV pseudo-image."
+      data-contribution="Introduces the efficient pillar-to-BEV representation that avoids expensive full 3D processing."
+      data-gap-label="limitation:"
+      data-gap="PointPillars was mainly designed for object detection, not dense off-road traversability classification and completion.">
+      <span class="snake-year">2019</span>
+      <div class="snake-title">PointPillars</div>
+      <div class="snake-body">Pillarized LiDAR → 2D BEV pseudo-image.</div>
+    </div>
+
+    <div class="snake-item s-left"
+      data-year="2021"
+      data-role="Lightweight segmentation/completion foundation"
+      data-title="RegSeg — Rethinking Dilated Convolution for Real-time Semantic Segmentation"
+      data-summary="RegSeg uses dilated convolutions and a lightweight decoder to expand the receptive field while keeping segmentation efficient."
+      data-contribution="Provides an efficient encoder-decoder design idea for completing dense prediction maps."
+      data-gap-label="limitation:"
+      data-gap="RegSeg is designed for image segmentation, not sparse LiDAR BEV maps with unknown or incomplete regions.">
+      <span class="snake-year">2021</span>
+      <div class="snake-title">RegSeg</div>
+      <div class="snake-body">Dilated convolutions + lightweight decoder.</div>
+    </div>
+
+    <div class="snake-item s-right"
+      data-year="2022"
+      data-role="Direct predecessor and main baseline"
+      data-title="BEVNet — Semantic Terrain Classification for Off-Road Autonomous Driving"
+      data-summary="BEVNet predicts a bird's-eye-view terrain-cost map from LiDAR for off-road navigation. It is the closest prior method to FASTC and the main baseline for comparison."
+      data-contribution="Defines the BEV traversability classification task using sparse LiDAR, temporal aggregation, and completion."
+      data-gap-label="Gap that motivates FASTC:"
+      data-gap="BEVNet is effective, but its 3D convolutions and recurrent temporal fusion make it heavier and slower. FASTC is designed to keep the BEV traversability goal while reducing computational cost.">
+      <span class="snake-year">2022</span>
+      <div class="snake-title">BEVNet</div>
+      <div class="snake-body">Direct predecessor: BEV terrain-cost maps from LiDAR.</div>
+    </div>
+
+    <div class="snake-item s-left snake-active"
+      data-year="2023"
+      data-role="Proposed method"
+      data-title="FASTC — Fast Attentional Semantic Traversability Classification"
+      data-summary="FASTC combines pillar-based LiDAR encoding, efficient 2D BEV processing, a traversability completion module, and spatio-temporal attention for multi-frame fusion."
+      data-contribution="Replaces heavier BEVNet-style 3D processing with a lighter pillar + 2D pipeline, while using attention to fuse multi-frame information."
+      data-gap-label="How FASTC responds:"
+      data-gap="FASTC directly addresses BEVNet's efficiency and accuracy limitations. On RELLIS-3D, FASTC-S reports 61.7% mIoU and FASTC-M reports 68.6% mIoU, compared with BEVNet-S at 55.9% and BEVNet-R at 64.4%.">
+      <span class="snake-year">2023</span>
+      <div class="snake-title">FASTC</div>
+      <div class="snake-body">Destination: pillars + 2D completion + spatio-temporal attention.</div>
+    </div>
+
+  </div>
+
+  <div class="snake-panel" id="fastcPanel">
+    <div class="snake-panel-year" id="fp2Year">2023</div>
+    <div class="snake-panel-title" id="fp2Title">FASTC — Fast Attentional Semantic Traversability Classification</div>
+    <div class="snake-panel-section"><strong>Role:</strong> <span id="fp2Role">Proposed method</span></div>
+    <div class="snake-panel-section"><strong>Summary:</strong> <span id="fp2Summary">FASTC combines pillar-based LiDAR encoding, efficient 2D BEV processing, a traversability completion module, and spatio-temporal attention for multi-frame fusion.</span></div>
+    <div class="snake-panel-section"><strong>Contribution:</strong> <span id="fp2Contribution">Replaces heavier BEVNet-style 3D processing with a lighter pillar + 2D pipeline, while using attention to fuse multi-frame information.</span></div>
+    <div class="snake-panel-section"><strong id="fp2GapLabel">How FASTC responds:</strong> <span id="fp2Gap">FASTC directly addresses BEVNet's efficiency and accuracy limitations. On RELLIS-3D, FASTC-S reports 61.7% mIoU and FASTC-M reports 68.6% mIoU, compared with BEVNet-S at 55.9% and BEVNet-R at 64.4%.</span></div>
+  </div>
+</div>
+
+<script>
+(function() {
+  var items = Array.from(document.querySelectorAll('#fastcTl .snake-item'));
+  var fp2Year = document.getElementById('fp2Year');
+  var fp2Title = document.getElementById('fp2Title');
+  var fp2Role = document.getElementById('fp2Role');
+  var fp2Summary = document.getElementById('fp2Summary');
+  var fp2Contribution = document.getElementById('fp2Contribution');
+  var fp2GapLabel = document.getElementById('fp2GapLabel');
+  var fp2Gap = document.getElementById('fp2Gap');
+
+  function activate(item) {
+    items.forEach(function(i) { i.classList.remove('snake-active'); });
+    item.classList.add('snake-active');
+
+    fp2Year.textContent = item.dataset.year;
+    fp2Title.textContent = item.dataset.title;
+    fp2Role.textContent = item.dataset.role;
+    fp2Summary.textContent = item.dataset.summary;
+    fp2Contribution.textContent = item.dataset.contribution;
+    fp2GapLabel.textContent = item.dataset.gapLabel || 'limitation:';
+    fp2Gap.textContent = item.dataset.gap;
+  }
+
+  items.forEach(function(item) {
+    item.addEventListener('click', function() { activate(item); });
+  });
+
+  var activeItem = document.querySelector('#fastcTl .snake-item.snake-active');
+  if (activeItem) {
+    activate(activeItem);
+  }
+})();
+</script>
+```
+<!-- END: FASTC Timeline -->
+
+
+
+
+
+## Results from latest literature {.smaller}
+
+| # | Method | Input / setting | RELLIS-3D mIoU (%) | Year | Source |
+|---:|---|---|---:|---:|---|
+| [1] | BEVNet-S | Single frame | 55.9 | 2022 | [A] |
+| [2] | Cylinder3D-TA-3D | Multi-frame | 40.8 | 2022* | [A], [B] |
+| [3] | Cylinder3D-TA | Multi-frame | 41.1 | 2022* | [A], [B] |
+| [4] | BEVNet-TA | Multi-frame | 61.5 | 2022 | [A] |
+| [5] | BEVNet-R | Multi-frame | 64.4 | 2022 | [A] |
+| [6] | FASTC-S | Single frame; pillar + 2D processing | 61.7 | 2023 | [C] |
+| [7] | FASTC-M | Multi-frame; spatio-temporal attention | 68.6 | 2023 | [C] |
+| [8] | BEVNet | Baseline reported by Zhang et al. | 64.1 | 2023 | [D] |
+| [9] | Res-3D CNN + Attention | Residual 3D sparse CNN + attention | 66.2 | 2023 | [D] |
+| [10] | RAC-BEVNet | BEV-based LiDAR | 66.2 | 2025 | [E] |
+
+: RELLIS-3D mIoU comparison from recent traversability-classification literature. {#tbl-rellis-miou}
+
+---
+
+**Corresponding papers**
+
+[A] Shaban et al., *Semantic Terrain Classification for Off-Road Autonomous Driving*, CoRL 2021 / PMLR 2022.  
+
+[B] Zhu et al., *Cylindrical and Asymmetrical 3D Convolution Networks for LiDAR Segmentation*, CVPR 2021.  
+
+[C] Chen et al., *FASTC: A Fast Attentional Framework for Semantic Traversability Classification Using Point Cloud*, ECAI 2023.  
+
+[D] Zhang et al., *Ground Mobile Robot Traversable Area Recognition Based on 3D CNN and Attention Mechanism*, IEEE ICUS, 2023.  
+
+[E] Wu et al., *A Real-Time LiDAR-Based Terrain Traversability Classification Approach in Off-Road Environments*, Robotica, 2025.
+
+\* Cylinder3D values are traversability results reported through the BEVNet/FASTC comparison; the original Cylinder3D model paper is from 2021.
+
+## Comparison
+
+| Comparison | BEVNet | FASTC |
+|---|---|---|
+| General idea | Converts LiDAR data into a 3D grid and processes it. | Converts LiDAR data into simpler pillars, then processes it mainly in 2D. |
+| Computation method | Heavier, because it relies on 3D convolutions. | Lighter and faster, because it reduces the use of 3D convolutions. |
+| Multi-frame handling | Uses a memory/recurrent model, such as ConvGRU. | Uses attention to select the most useful information from multiple frames. |
+| Speed | Slower in the single-frame setting. | Faster in the single-frame setting. |
+| Accuracy on RELLIS-3D | BEVNet-S: 55.9%; BEVNet-R: 64.4%. | FASTC-S: 61.7%; FASTC-M: 68.6%. |
+
+: Layman comparison between BEVNet and FASTC for LiDAR-based traversability classification. {#tbl-bevnet-fastc-comparison}
+
+
+# <span style="color:#1f3f64; font-weight:800; font-size:0.72em;">Proposed Approach</span> {background-color="#ffffff"}
+
+<p style="color:#64748b; font-size:0.5em; margin-top:0.6em;">
+
+</p>
+
+<div style="width:120px; height:5px; background:#2563eb; border-radius:999px; margin-top:1.1em;"></div>
+
+
+<!-- START: System Overview -->
+## System Overview
+
+![](pipeline.svg){width=96% fig-align="center"}
+<!-- END: Risk-Awa re Flowchart-->
+
+
+<!-- START: Workflow Overview -->
+## Workflow overview
+![](flow_ip_op.svg){width=90% fig-align="center"}
+<!-- END: Workflow Overview -->
+
+
+
+
+<!-- START: Main Idea -->
+<!-- SLIDE 5: Main idea -->
+## Risk Aware Approach
+
+### From accuracy-only evaluation to behavior-aware model selection
+
+For a set of candidate models $\Theta = \{\theta_1,\dots,\theta_M\}$:
+
+Standard selection uses
+
+$$
+\theta^*_{\text{metric}} = \arg\max_{\theta \in \Theta} \mathrm{mIoU}(\theta)
+$$
+
+Proposed selection uses
+
+$$
+\theta^* = \arg\min_{\theta \in \Theta} U(\theta)
+$$
+
+where $U(\theta)$ is a *behavior-aware expected risk*.
+
+Different attention models can yield better mIoU.
+
+::: notes
+State clearly that this is the central scientific contribution.
+:::
+<!-- END: Main Idea -->
+
+
+
+
+
+
+
+
+## Risk-Aware Flowchart
+
+```{=html}
+<div style="min-height: 560px; display: flex; align-items: center; justify-content: center;">
+  <img
+    src="flowchart_risk_aware.svg"
+    alt="Risk-Aware Flowchart"
+    style="width: 72%; max-width: 1100px; max-height: 76vh; display: block;">
+</div>
+```
+<!-- START: Mathematical Formulation -->
+<!-- SLIDE 7: Mathematical formulation -->
+## Mathematical formulation
+
+### Misclassification cost matrix
+
+Let
+
+$$
+C_{ij} = \text{cost of predicting class } i \text{ when the true class is } j
+$$
+
+with high penalties assigned to dangerous confusions, especially:
+
+- predicting safe when the truth is hazardous,
+- underestimating stuck or water regions,
+- confusing risk-critical rare classes with benign terrain.
+<!-- END: Mathematical Formulation -->
+
+<!-- START: Expected Behavioral Risk -->
+## Expected behavioral risk
+
+$$
+U(\theta)
+=
+\sum_{j=1}^{K} \pi_j \sum_{i=1}^{K} C_{ij} \, P_{ij}(\theta)
+$$
+
+where:
+
+- $\pi_j$ is empirical class frequency,
+- $P_{ij}(\theta)$ is the conditional confusion probability.
+
+::: notes
+Stress that this connects confusion statistics, class imbalance, and behavioral cost in one expression.
+:::
+<!-- END: Expected Behavioral Risk -->
+
+
+
+
+
+<!-- START: Behavior-Aware Evaluation Framework -->
+<!-- SLIDE 20: Behavior-aware evaluation framework timeline -->
+
+# <span style="color:#1f3f64; font-weight:800; font-size:0.72em;">Architectures</span> {background-color="#ffffff"}
+
+<p style="color:#64748b; font-size:0.5em; margin-top:0.6em;">
+
+</p>
+
+<div style="width:120px; height:5px; background:#2563eb; border-radius:999px; margin-top:1.1em;"></div>
+
+
+
+
+<!-- START: Candidate LiDAR Architectures -->
+<!-- SLIDE 9: Candidate LiDAR architectures -->
+## Candidate LiDAR architectures
+
+### LiDAR-based models to be studied and improved
+
+#### 1. FASTC-style architecture
+
+- attentional framework for semantic traversability classification,
+- efficient feature extraction from point clouds,
+- opportunity to refine attention and fusion design.
+
+#### 2. BEVNet-style architecture with sparse 3D convolution
+
+- voxelization and sparse 3D feature extraction,
+- residual modules,
+- attention mechanisms,
+- temporal aggregation for BEV traversability recognition.
+These are not treated as fixed baselines only; they are candidate backbones for improvement.
+<!-- END: Candidate LiDAR Architectures -->
+
+
+<!-- START: Why LiDAR -->
+<!-- SLIDE 10: Why LiDAR in this proposal -->
+## Why LiDAR in this proposal
+
+### Why prioritize LiDAR for the main implementation
+
+- LiDAR provides **terrain geometry and obstacle structure** directly.
+- It supports traversability reasoning in unstructured environments.
+- It is well suited for **BEV hazard representation**.
+- It provides a strong base before extending to multimodal fusion.
+
+### Important clarification
+
+The framework itself remains conceptually flexible and can later support RGB, semantic, geometric, or hybrid sensing pipelines.
+
+::: notes
+Keep this slide brief and engineering-oriented.
+:::
+<!-- END: Why LiDAR -->
+
+
+<!-- START: FASTC Architecture Flowchart -->
+## Fast Attentional Framework for Semantic Traversability Classification Using Point Cloud (FASTC)
+
+:::{style="text-align: center;"}
+![](Fastc_flowchart.svg){width=60%}
+:::
+<!-- END: FASTC Architecture Flowchart -->
+
+
+
+<!-- START: FASTC Timeline -->
+<!-- SLIDE 19: FASTC key prior work timeline -->
+<!-- START: RAC-BEVNet Architecture -->
+## RAC-BEVNet = Residual-Attention-ConvGRU BEVNet Architecture
+
+:::{style="text-align: center;"}
+![](RSCA-ConvGRU.svg){width=60%}
+:::
+<!-- END: RAC-BEVNet Architecture -->
+
+<!-- START: BEVNet Timeline -->
+
+
 
 
 <!-- START: Preliminary Evidence -->
@@ -1067,15 +1189,6 @@ Say "preliminary evidence" and "suggests" rather than "proves."
 
 
 
-
-## Results from latest literature
-
-| **Paper** | **Method** | **RELLIS-3D mIoU** |
-|---|---|---:|
-| FASTC | FASTC-S | 61.7% |
-| FASTC | FASTC-M | 68.6% |
-| RAC-BEVNet | Proposed method | 66.2% |
-<!-- END: Results from Latest Literature -->
 
 
 <!-- START: Qualitative Comparison -->

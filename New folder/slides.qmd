@@ -1,13 +1,16 @@
 ---
 title: "Behavior-Aware Evaluation and Improvement of LiDAR-Based Off-Road Terrain Perception Algorithms"
-subtitle: "presentation"
+subtitle: "Proposal Defence"
 author: "Mahmoud Abdelaal"
+institute: |
+  **Supervisor:** Dr. Brahim Brahimi
+  **Committee Members:** Dr. Mohammad A. Abido and Dr. Mahmoud Khater
 format:
   revealjs:
     theme: serif
     slide-number: true
     toc: false
-    transition: fade
+    transition: slide
     incremental: true
     chalkboard: false
     controls: true
@@ -19,6 +22,22 @@ format:
 execute:
   echo: false
 ---
+
+```{=html}
+<style>
+.reveal .fragment:not(.visible):not(.current-fragment) {
+  opacity: 0;
+  transform: translateY(20px);
+}
+.reveal .fragment {
+  transition: opacity 0.4s ease, transform 0.4s ease !important;
+}
+.reveal .fragment.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
+```
 
 ## Title and framing
 
@@ -58,14 +77,14 @@ But this assumption can fail because of:
 
 ### Main gap
 
-A perception model may look strong under standard metrics while still producing **unsafe downstream decisions**.
+A perception model may look strong under standard metrics while still producing [**unsafe downstream decisions**]{.fragment .highlight-red}.
 
 ::: notes
 This is the slide that should resonate most with Dr. Abido.
 Frame the issue as an objective-function mismatch.
 :::
 
-## Main idea
+## Main idea {auto-animate=true}
 
 ### From accuracy-only evaluation to behavior-aware model selection
 
@@ -76,6 +95,12 @@ Standard selection uses
 $$
 \theta^*_{\text{metric}} = \arg\max_{\theta \in \Theta} \mathrm{mIoU}(\theta)
 $$
+
+## Main idea {auto-animate=true}
+
+### From accuracy-only evaluation to behavior-aware model selection
+
+For a set of candidate models $\Theta = \{\theta_1,\dots,\theta_M\}$:
 
 Proposed selection uses
 
@@ -258,7 +283,7 @@ This should read like thesis contributions, not just tasks.
 If asked, mention that the timeline assumes code reuse from existing baselines where possible.
 :::
 
-## Takeaway
+## Takeaway {background-color="#1a1a2e"}
 
 ### Closing message
 
