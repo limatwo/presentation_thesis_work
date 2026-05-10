@@ -927,6 +927,28 @@ Use this if you want to invite research discussion after the main presentation.
 
 
 
+<!-- START: Warthog Robot -->
+## RELLIS-3D Dataset — Data Collection Platform
+```{=html}
+<div style="display:flex; gap:40px; align-items:center; justify-content:center; height:80%;">
+  <div style="flex:1; text-align:center;">
+    <img src="warthog.png" style="max-height:420px; object-fit:contain;">
+    <div style="font-size:0.7em; color:#555; margin-top:8px;">Clearpath Warthog UGV — the robot used to collect the RELLIS-3D dataset</div>
+  </div>
+  <div style="flex:1; font-size:0.88em; color:#333; line-height:1.9;">
+    <p><strong>RELLIS-3D</strong> is a multimodal off-road dataset recorded from a <strong>Clearpath Warthog</strong> unmanned ground vehicle (UGV).</p>
+    <ul>
+      <li>Collected across a real off-road campus environment(Texas A&amp;M, RELLIS campus)</li>
+      <li>Sensors: 3D LiDAR, stereo camera, GPS/IMU</li>
+      <li>13,556 LiDAR scans with pixel-level ontology annotations</li>
+      <li>20 semantic classes including mud, puddles, rocks, and vegetation</li>
+      <li>Primary benchmark used to evaluate traversability classification in this proposal</li>
+    </ul>
+  </div>
+</div>
+```
+<!-- END: Warthog Robot -->
+
 ## Results from latest literature {.smaller}
 
 | # | Method | Input / setting | RELLIS-3D mIoU (%) | Year | Source |
