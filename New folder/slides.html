@@ -131,16 +131,35 @@
 
 <section id="title-slide" class="quarto-title-block center">
   <h1 class="title">Behavior-Aware Evaluation and Improvement of LiDAR-Based Off-Road Terrain Perception Algorithms</h1>
-  <p class="subtitle">presentation</p>
+  <p class="subtitle">Proposal Defence</p>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
 <div class="quarto-title-author-name">
 Mahmoud Abdelaal 
 </div>
-</div>
+        <p class="quarto-title-affiliation">
+            </p><p><strong>Supervisor:</strong> Dr.&nbsp;Brahim Brahimi <strong>Committee Members:</strong> Dr.&nbsp;Mohammad A. Abido and Dr.&nbsp;Mahmoud Khater</p>
+          <p></p>
+    </div>
 </div>
 
+</section>
+<section class="slide level2">
+
+<style>
+.reveal .fragment:not(.visible):not(.current-fragment) {
+  opacity: 0;
+  transform: translateY(20px);
+}
+.reveal .fragment {
+  transition: opacity 0.4s ease, transform 0.4s ease !important;
+}
+.reveal .fragment.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
 </section>
 <section id="title-and-framing" class="slide level2">
 <h2>Title and framing</h2>
@@ -184,7 +203,7 @@ Mahmoud Abdelaal
 <li class="fragment"><strong>safety-critical false-safe errors</strong>.</li>
 </ul>
 <h3 id="main-gap">Main gap</h3>
-<p>A perception model may look strong under standard metrics while still producing <strong>unsafe downstream decisions</strong>.</p>
+<p>A perception model may look strong under standard metrics while still producing <span class="fragment highlight-red"><strong>unsafe downstream decisions</strong></span>.</p>
 <aside class="notes">
 <p>This is the slide that should resonate most with Dr.&nbsp;Abido. Frame the issue as an objective-function mismatch.</p>
 <style type="text/css">
@@ -199,14 +218,19 @@ Mahmoud Abdelaal
           display:block!important;
       }</style></aside>
 </section>
-<section id="main-idea" class="slide level2">
-<h2>Main idea</h2>
+<section id="main-idea" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">Main idea</h2>
 <h3 id="from-accuracy-only-evaluation-to-behavior-aware-model-selection">From accuracy-only evaluation to behavior-aware model selection</h3>
 <p>For a set of candidate models <span class="math inline">\(\Theta = \{\theta_1,\dots,\theta_M\}\)</span>:</p>
 <p>Standard selection uses</p>
 <p><span class="math display">\[
 \theta^*_{\text{metric}} = \arg\max_{\theta \in \Theta} \mathrm{mIoU}(\theta)
 \]</span></p>
+</section>
+<section id="main-idea-1" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">Main idea</h2>
+<h3 id="from-accuracy-only-evaluation-to-behavior-aware-model-selection-1">From accuracy-only evaluation to behavior-aware model selection</h3>
+<p>For a set of candidate models <span class="math inline">\(\Theta = \{\theta_1,\dots,\theta_M\}\)</span>:</p>
 <p>Proposed selection uses</p>
 <p><span class="math display">\[
 \theta^* = \arg\min_{\theta \in \Theta} U(\theta)
@@ -477,7 +501,7 @@ U(\theta)
           display:block!important;
       }</style></aside>
 </section>
-<section id="takeaway" class="slide level2">
+<section id="takeaway" class="slide level2" data-background-color="#1a1a2e">
 <h2>Takeaway</h2>
 <h3 id="closing-message">Closing message</h3>
 <p>This proposal shifts off-road terrain perception from:</p>
@@ -678,7 +702,7 @@ Use this if you want to invite research discussion after the main presentation.
         previewLinks: false,
 
         // Transition style (none/fade/slide/convex/concave/zoom)
-        transition: 'fade',
+        transition: 'slide',
 
         // Transition speed (default/fast/slow)
         transitionSpeed: 'default',
